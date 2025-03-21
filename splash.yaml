@@ -1,0 +1,7 @@
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "#161616"
+  image:  assets/logo.png
+  android_12:
+    image:  assets/logo.png
