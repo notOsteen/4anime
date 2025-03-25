@@ -4,6 +4,7 @@ import 'package:anime_player/views/history.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                   controller.lastWatched.value,
                 );
                 return PopupMenuButton<String>(
-                  onSelected: (value) {
+                  onSelected: (value) async {
                     switch (value) {
                       case 'toggle_bookmark':
                         controller.toggleBookmark(
@@ -100,6 +101,15 @@ class _HomePageState extends State<HomePage> {
                         break;
                       case 'reload':
                         controller.webController.reload();
+                        break;
+                      case 'share':
+                        String? currentUrl =
+                            await controller.webController.currentUrl();
+                        if (currentUrl != null && currentUrl.isNotEmpty) {
+                          Share.share(currentUrl);
+                        } else {
+                          Get.snackbar("Error", "No URL to share");
+                        }
                         break;
                       case 'exit':
                         _showExitDialog();
@@ -161,6 +171,13 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white,
                             ),
                             title: Text('Exit', style: _style),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'share',
+                          child: ListTile(
+                            leading: Icon(Icons.share, color: Colors.white),
+                            title: Text('Share', style: _style),
                           ),
                         ),
                       ],
